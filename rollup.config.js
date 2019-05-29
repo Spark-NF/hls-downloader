@@ -3,13 +3,14 @@ import tslint from "rollup-plugin-tslint";
 import typescript from "rollup-plugin-typescript2"
 import packageJson from "./package.json"
 
-const makeConfig = (inputFile, outputFile) => ({
+const makeConfig = (inputFile, outputFile, external) => ({
     input: inputFile,
     output: {
         file: outputFile,
         format: "cjs",
     },
     external: [
+        ...external,
         ...["child_process", "fs", "os", "path"],
         ...Object.keys(packageJson.dependencies || {}),
         ...Object.keys(packageJson.peerDependencies || {}),
@@ -27,6 +28,6 @@ const makeConfig = (inputFile, outputFile) => ({
 });
 
 export default [
-    makeConfig("src/index.ts", packageJson.main),
-    makeConfig("src/cli.ts", packageJson.bin["hls-downloader"]),
+    makeConfig("src/index.ts", packageJson.main, []),
+    makeConfig("src/cli.ts", packageJson.bin["hls-downloader"], ["./index"]),
 ];

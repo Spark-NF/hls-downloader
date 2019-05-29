@@ -28,13 +28,13 @@ export async function download(config: IConfig) {
     }
 
     // Start download
-    /*const chunksDownloader = new ChunksDownloader(
+    const chunksDownloader = new ChunksDownloader(
         playlistUrl,
         config.concurrency || 1,
         config.fromEnd || 1,
         segmentsDir,
     );
-    await chunksDownloader.start();*/
+    await chunksDownloader.start();
 
     // Get all segments
     const segments = fs.readdirSync(segmentsDir).map((f) => segmentsDir + f);

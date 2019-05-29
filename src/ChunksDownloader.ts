@@ -30,8 +30,8 @@ export class ChunksDownloader {
     private async refreshPlayList(): Promise<void> {
         const playlist = await this.loadPlaylist();
 
-        const interval = playlist.targetDuration;
-        const segments = playlist.segments.map((s) => s.uri);
+        const interval = playlist.targetDuration || 5;
+        const segments = playlist.segments!.map((s) => s.uri);
 
         let toLoad: string[] = [];
         if (!this.lastSegment) {
