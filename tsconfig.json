@@ -1,0 +1,19 @@
+{
+    "compilerOptions": {
+        "module": "es6",
+        "removeComments": false,
+        "outDir": "build/",
+        "strict": true,
+        "target": "es2017",
+        "moduleResolution": "node",
+        "resolveJsonModule": true,
+        "sourceMap": true,
+        "typeRoots" : [
+            "node_modules/@types",
+            "types"
+        ]
+    },
+    "include": [
+        "src/**/*"
+    ]
+}
