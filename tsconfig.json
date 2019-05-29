@@ -4,6 +4,7 @@
         "removeComments": false,
         "outDir": "build/",
         "strict": true,
+        "declaration": true,
         "target": "es2017",
         "moduleResolution": "node",
         "resolveJsonModule": true,

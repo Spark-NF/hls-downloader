@@ -7,6 +7,8 @@ import { mergeChunks as mergeChunksFfmpeg, transmuxTsToMp4 } from "./ffmpeg";
 import { mergeFiles as mergeChunksStream } from "./stream";
 import { StreamChooser } from "./StreamChooser.js";
 
+export type IConfig = IConfig;
+
 export async function download(config: IConfig) {
     // Temporary files
     const runId = Date.now();
