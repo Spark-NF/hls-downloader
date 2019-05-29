@@ -1,5 +1,5 @@
 {
-    "name": "hls-downloader",
+    "name": "node-hls-downloader",
     "version": "0.0.1",
     "description": "Download HLS streams.",
     "main": "dist/index.js",
