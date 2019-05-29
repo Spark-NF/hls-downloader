@@ -8,6 +8,7 @@ export class ChunksDownloader {
 
     private resolve?: () => void;
     private reject?: () => void;
+    private timeoutHandle?: NodeJS.Timeout;
 
     constructor(
         private playlistUrl: string,
@@ -23,6 +24,8 @@ export class ChunksDownloader {
     public start(): Promise<void> {
         return new Promise((resolve, reject) => {
             this.resolve = resolve;
+            this.reject = reject;
+
             this.queue.add(() => this.refreshPlayList());
         });
     }
@@ -33,6 +36,8 @@ export class ChunksDownloader {
         const interval = playlist.targetDuration || 5;
         const segments = playlist.segments!.map((s) => s.uri);
 
+        setTimeout(() => this.refreshPlayList(), interval * 1000);
+
         let toLoad: string[] = [];
         if (!this.lastSegment) {
             toLoad = segments.slice(segments.length - this.fromEnd);
@@ -42,8 +47,8 @@ export class ChunksDownloader {
                 console.error("wut wut missing segment");
                 toLoad = segments;
             } else if (index === segments.length - 1) {
-                console.log("finished?");
-                return this.resolve!(); // TODO: wait X seconds to be sure we aren't just too fast
+                console.log("No new segments since last check");
+                return;
             } else {
                 toLoad = segments.slice(index + 1);
             }
@@ -55,7 +60,16 @@ export class ChunksDownloader {
             this.queue.add(() => this.downloadSegment(uri));
         }
 
-        setTimeout(() => this.refreshPlayList(), interval * 1000);
+        // Timeout after X seconds without new segment
+        if (this.timeoutHandle) {
+            clearTimeout(this.timeoutHandle);
+        }
+        this.timeoutHandle = setTimeout(() => this.timeout(), 60 * 1000);
+    }
+
+    private timeout(): void {
+        console.log("No new segment for a while, stopping");
+        this.resolve!();
     }
 
     private async loadPlaylist(): Promise<m3u8.Manifest> {

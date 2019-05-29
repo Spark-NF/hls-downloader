@@ -48,6 +48,6 @@ export async function download(config: IConfig) {
     await transmuxTsToMp4(mergedSegmentsFile, config.outputFile);
 
     // Delete temporary files
-    // fs.remove(segmentsDir);
+    fs.remove(segmentsDir);
     fs.remove(mergedSegmentsFile);
 }
