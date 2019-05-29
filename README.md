@@ -1,6 +1,7 @@
 <h1 align="center">HLS downloader</h1>
 
 [![Build Status](https://travis-ci.org/Spark-NF/hls-downloader.svg?branch=master)](https://travis-ci.org/Spark-NF/hls-downloader)
+[![Code Coverage](https://img.shields.io/codecov/c/github/Spark-NF/hls-downloader.svg)](https://codecov.io/gh/Spark-NF/hls-downloader)
 [![Project license](https://img.shields.io/github/license/Spark-NF/hls-downloader.svg)](https://raw.githubusercontent.com/Spark-NF/hls-downloader/master/LICENSE)
 
 ## About

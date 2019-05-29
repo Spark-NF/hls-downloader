@@ -19,7 +19,9 @@ export async function download(config: IConfig) {
 
     // Choose proper stream
     const streamChooser = new StreamChooser(config.streamUrl);
-    await streamChooser.load();
+    if (!await streamChooser.load()) {
+        return;
+    }
     const playlistUrl = streamChooser.getPlaylistUrl(config.quality);
     if (!playlistUrl) {
         return;

@@ -10,7 +10,7 @@ export class StreamChooser {
         private streamUrl: string,
     ) {}
 
-    public async load(): Promise<void> {
+    public async load(): Promise<boolean> {
         const streams = await get(this.streamUrl);
 
         const parser = new m3u8.Parser();
@@ -18,6 +18,10 @@ export class StreamChooser {
         parser.end();
 
         this.manifest = parser.manifest;
+
+        return (this.manifest.segments && this.manifest.segments.length > 0)
+            || (this.manifest.playlists && this.manifest.playlists.length > 0)
+            || false;
     }
 
     public isMaster(): boolean {
@@ -25,7 +29,7 @@ export class StreamChooser {
             throw Error("You need to call 'load' before 'getPlaylistUrl'");
         }
 
-        return this.manifest.segments && this.manifest.segments.length > 0 || false;
+        return this.manifest.playlists && this.manifest.playlists.length > 0 || false;
     }
 
     public getPlaylistUrl(maxBandwidth?: "worst" | "best" | number): string | false {
