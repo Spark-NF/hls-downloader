@@ -8,24 +8,64 @@
 ## About
 Downloads a live HLS stream.
 
-### Usage
+## Usage
+### CLI
 ```
 hls-downloader [-V] [-h] [-q QUALITY] -o FILE stream_url
 ```
 
-### Arguments
-* `stream_url`: the URL to the stream (either the master file or a playlist)
-* `--ffmpeg-merge`: merge TS segments using FFMPEG instead of basic concatenation (default: `false`)
-* `--segments-dir DIR`: where the TS segments will be stored
-* `--merged-segments-file FILE`: location of the merged TS segments file
-* `-c THREADS`, `--concurrency THREADS`: how many threads to use for downloading segments (default: `1`)
-* `-q QUALITY`, `--quality QUALITY`: stream quality when possible (`worst`, `best`, or max bandwidth), only used when using a master file
-* `-o FILE`, `--output-file FILE`: target file to download the stream to
-
-### Example
+#### Example
 ```
 hls-downloader -q best -c 5 -o video.mp4 "https://......./stream.m3u8"
 ```
+
+### API
+```js
+import { download } from "node-hls-downloader";
+
+await download({
+    quality: "best",
+    concurrency: 5,
+    outputFile: "video.mp4",
+    streamUrl: "https://......./stream.m3u8",
+});
+```
+
+### Options
+_Note: options marked with 🔒 are mandatory._
+
+#### `stream_url`, `streamUrl` 🔒
+The URL to the stream (either the master file or a playlist).
+
+#### `--ffmpeg-merge`, `mergeUsingFfmpeg`
+Merge TS segments using FFMPEG instead of basic concatenation.
+Not recommended, but you can use it if stuttering issues occur when merging the TS segments.
+
+* Default: `false`
+
+#### `--segments-dir`, `segmentsDir`
+Where the TS segments will be stored.
+
+* Default: a temporary directory
+
+#### `--merged-segments-file`, `mergedSegmentsFile`
+Location of the merged TS segments file.
+
+* Default: a temporary file
+
+#### `-c`, `--concurrency`, `concurrency`
+How many threads to use for downloading segments.
+
+* Default: `1`
+
+#### `-q`, `--quality`, `quality` 🔒*
+Stream quality: `worst`, `best`, or max bandwidth.
+
+_* only mandatory if passing a master playlist stream URL_
+
+#### `-o`, `--output-file`, `outputFile` 🔒
+Target file to download the stream to.
+If it already exists, it will be overwritten.
 
 ## Authors
 * [Spark-NF](https://github.com/Spark-NF)
