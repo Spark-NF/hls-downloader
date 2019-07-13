@@ -1,6 +1,6 @@
 {
     "name": "node-hls-downloader",
-    "version": "0.0.4",
+    "version": "0.0.5",
     "description": "Download HLS streams.",
     "main": "dist/index.js",
     "types": "dist/src/index.d.ts",
@@ -16,23 +16,23 @@
     "license": "Apache-2.0",
     "dependencies": {
         "commander": "^2.20.0",
-        "fs-extra": "^8.0.1",
-        "m3u8-parser": "^4.3.0",
-        "p-queue": "^5.0.0",
+        "fs-extra": "^8.1.0",
+        "m3u8-parser": "^4.4.0",
+        "p-queue": "^6.1.0",
         "request": "^2.88.0"
     },
     "devDependencies": {
-        "@types/fs-extra": "^7.0.0",
-        "@types/jest": "^24.0.13",
-        "@types/node": "^12.0.3",
+        "@types/fs-extra": "^8.0.0",
+        "@types/jest": "^24.0.15",
+        "@types/node": "^12.6.2",
         "@types/request": "^2.48.1",
         "jest": "^24.8.0",
-        "rollup": "^1.12.4",
+        "rollup": "^1.16.7",
         "rollup-plugin-json": "^4.0.0",
         "rollup-plugin-tslint": "^0.2.2",
-        "rollup-plugin-typescript2": "^0.21.1",
+        "rollup-plugin-typescript2": "^0.22.0",
         "ts-jest": "^24.0.2",
-        "tslint": "^5.16.0",
-        "typescript": "^3.4.5"
+        "tslint": "^5.18.0",
+        "typescript": "^3.5.3"
     }
 }

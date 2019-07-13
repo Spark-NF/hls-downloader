@@ -1,5 +1,5 @@
 import * as m3u8 from "m3u8-parser";
-import * as PQueue from "p-queue";
+import PQueue from "p-queue";
 import { download, get } from "./http";
 
 export class ChunksDownloader {
