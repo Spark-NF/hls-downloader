@@ -2,12 +2,12 @@ import * as fs from "fs-extra";
 import * as os from "os";
 import * as path from "path";
 import { ChunksDownloader } from "./ChunksDownloader";
-import { IConfig } from "./Config";
+import { IConfig as IIConfig } from "./Config";
 import { mergeChunks as mergeChunksFfmpeg, transmuxTsToMp4 } from "./ffmpeg";
 import { mergeFiles as mergeChunksStream } from "./stream";
 import { StreamChooser } from "./StreamChooser.js";
 
-export type IConfig = IConfig;
+export type IConfig = IIConfig;
 
 export async function download(config: IConfig) {
     // Temporary files

@@ -1,4 +1,4 @@
-import json from "rollup-plugin-json"
+import json from "@rollup/plugin-json"
 import tslint from "rollup-plugin-tslint";
 import typescript from "rollup-plugin-typescript2"
 import packageJson from "./package.json"
