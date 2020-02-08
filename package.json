@@ -12,6 +12,10 @@
         "watch": "rollup -cw",
         "test": "jest --coverage"
     },
+    "repository": {
+        "type": "git",
+        "url": "git+https://github.com/Spark-NF/hls-downloader.git"
+    },
     "author": "Spark-NF <spark_ps@hotmail.fr>",
     "license": "Apache-2.0",
     "dependencies": {
