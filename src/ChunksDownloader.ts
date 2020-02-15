@@ -34,7 +34,7 @@ export class ChunksDownloader {
         const playlist = await this.loadPlaylist();
 
         const interval = playlist.targetDuration || 5;
-        const segments = playlist.segments!.map((s) => s.uri);
+        const segments = playlist.segments!.map((s) => new URL(s.uri, this.playlistUrl).href);
 
         setTimeout(() => this.refreshPlayList(), interval * 1000);
 

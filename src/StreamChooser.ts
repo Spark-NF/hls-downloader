@@ -58,7 +58,8 @@ export class StreamChooser {
             } else {
                 compareFn = (prev, current) => (prev.attributes.BANDWIDTH > current.attributes.BANDWIDTH || current.attributes.BANDWIDTH > maxBandwidth) ? prev : current;
             }
-            return this.manifest.playlists.reduce(compareFn).uri;
+            const uri = this.manifest.playlists.reduce(compareFn).uri;
+            return new URL(uri, this.streamUrl).href;
         }
 
         console.error("No stream or playlist found in URL:", this.streamUrl);
