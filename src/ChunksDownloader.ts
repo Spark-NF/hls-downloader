@@ -10,6 +10,7 @@ export class ChunksDownloader {
     private resolve?: () => void;
     private reject?: () => void;
     private timeoutHandle?: NodeJS.Timeout;
+    private refreshHandle?: NodeJS.Timeout;
 
     constructor(
         private playlistUrl: string,
@@ -37,7 +38,7 @@ export class ChunksDownloader {
         const interval = playlist.targetDuration || 5;
         const segments = playlist.segments!.map((s) => new URL(s.uri, this.playlistUrl).href);
 
-        setTimeout(() => this.refreshPlayList(), interval * 1000);
+        this.refreshHandle = setTimeout(() => this.refreshPlayList(), interval * 1000);
 
         let toLoad: string[] = [];
         if (!this.lastSegment) {
@@ -70,6 +71,9 @@ export class ChunksDownloader {
 
     private timeout(): void {
         console.log("No new segment for a while, stopping");
+        if (this.refreshHandle) {
+            clearTimeout(this.refreshHandle);
+        }
         this.resolve!();
     }
 
