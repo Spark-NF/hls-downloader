@@ -1,5 +1,6 @@
 import * as m3u8 from "m3u8-parser";
 import PQueue from "p-queue";
+import * as path from "path";
 import { download, get } from "./http";
 
 export class ChunksDownloader {
@@ -90,7 +91,7 @@ export class ChunksDownloader {
         filename = filename.substr(slash + 1);
 
         // Download file
-        await download(segmentUrl, this.segmentDirectory + filename);
+        await download(segmentUrl, path.join(this.segmentDirectory, filename));
         console.log("Received:", segmentUrl);
     }
 }
