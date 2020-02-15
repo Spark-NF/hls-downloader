@@ -12,7 +12,7 @@ const makeConfig = (inputFile, outputFile, external, runnable) => ({
     },
     external: [
         ...external,
-        ...["child_process", "fs", "os", "path"],
+        ...["child_process", "fs", "os", "path", "url"],
         ...Object.keys(packageJson.dependencies || {}),
         ...Object.keys(packageJson.peerDependencies || {}),
     ],

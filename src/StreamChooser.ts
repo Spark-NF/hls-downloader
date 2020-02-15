@@ -1,4 +1,5 @@
 import * as m3u8 from "m3u8-parser";
+import { URL } from "url";
 import { get } from "./http";
 
 export class StreamChooser {
