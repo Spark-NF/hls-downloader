@@ -3,7 +3,7 @@ import * as request from "request";
 
 export function get(url: string): Promise<string> {
     return new Promise<string>((resolve, reject) => {
-        request.get(url, (error: string, response: any, body: string) => {
+        request.get(url, (error: string, response: request.Response, body: string) => {
             if (error) {
                 reject(error);
             } else {

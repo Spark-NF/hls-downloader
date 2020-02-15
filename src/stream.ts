@@ -1,6 +1,6 @@
 import * as fs from "fs";
 
-function copyToStream(inFile: string, outStream: fs.WriteStream) {
+function copyToStream(inFile: string, outStream: fs.WriteStream): Promise<void> {
     return new Promise((resolve, reject) => {
         fs
             .createReadStream(inFile)
@@ -10,7 +10,7 @@ function copyToStream(inFile: string, outStream: fs.WriteStream) {
     });
 }
 
-export async function mergeFiles(files: string[], outputFile: string) {
+export async function mergeFiles(files: string[], outputFile: string): Promise<void> {
     const outStream = fs.createWriteStream(outputFile);
     for (const file of files) {
         await copyToStream(file, outStream);

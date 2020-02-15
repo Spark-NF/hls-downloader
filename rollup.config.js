@@ -1,5 +1,5 @@
 import json from "@rollup/plugin-json"
-import tslint from "rollup-plugin-tslint";
+import { eslint } from "rollup-plugin-eslint";
 import typescript from "rollup-plugin-typescript2"
 import packageJson from "./package.json"
 
@@ -18,9 +18,13 @@ const makeConfig = (inputFile, outputFile, external, runnable) => ({
     ],
     plugins: [
         json(),
-        tslint({
+        eslint({
             throwOnError: true,
-            exclude: "*.json",
+            throwOnWarning: true,
+            exclude: [
+                "node_modules/**",
+                "*.json",
+            ],
         }),
         typescript({
             typescript: require("typescript"),

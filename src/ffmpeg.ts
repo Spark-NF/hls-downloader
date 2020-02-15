@@ -1,7 +1,7 @@
 import * as cp from "child_process";
 import * as fs from "fs";
 
-async function spawnFfmpeg(argss: string[]) {
+async function spawnFfmpeg(argss: string[]): Promise<void> {
     return new Promise((resolve, reject) => {
         console.log("Spawning FFMPEG", "ffmpeg", argss.join(" "));
 
@@ -25,7 +25,7 @@ async function spawnFfmpeg(argss: string[]) {
     });
 }
 
-export async function mergeChunks(segments: string[], outputFile: string) {
+export async function mergeChunks(segments: string[], outputFile: string): Promise<void> {
     // Temporary files
     const segmentsFile = "ffmpeg-input.txt";
 
@@ -48,7 +48,7 @@ export async function mergeChunks(segments: string[], outputFile: string) {
     fs.unlinkSync(segmentsFile);
 }
 
-export async function transmuxTsToMp4(inputFile: string, outputFile: string) {
+export async function transmuxTsToMp4(inputFile: string, outputFile: string): Promise<void> {
     await spawnFfmpeg([
         "-y",
         "-loglevel", "warning",

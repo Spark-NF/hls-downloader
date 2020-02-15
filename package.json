@@ -8,6 +8,7 @@
         "hls-downloader": "dist/cli.js"
     },
     "scripts": {
+        "lint": "eslint -c .eslintrc.js --ext ts src",
         "build": "rollup -c",
         "watch": "rollup -cw",
         "test": "jest --coverage"
@@ -31,12 +32,14 @@
         "@types/jest": "^25.1.2",
         "@types/node": "^13.7.0",
         "@types/request": "^2.48.4",
+        "@typescript-eslint/eslint-plugin": "^2.19.2",
+        "@typescript-eslint/parser": "^2.19.2",
+        "eslint": "^6.8.0",
         "jest": "^25.1.0",
         "rollup": "^1.31.0",
-        "rollup-plugin-tslint": "^0.2.2",
+        "rollup-plugin-eslint": "^7.0.0",
         "rollup-plugin-typescript2": "^0.25.3",
         "ts-jest": "^25.2.0",
-        "tslint": "^6.0.0",
         "typescript": "^3.7.5"
     }
 }

@@ -9,7 +9,7 @@ import { StreamChooser } from "./StreamChooser.js";
 
 export type IConfig = IIConfig;
 
-export async function download(config: IConfig) {
+export async function download(config: IConfig): Promise<void> {
     // Temporary files
     const runId = Date.now();
     const mergedSegmentsFile = config.mergedSegmentsFile || os.tmpdir() + "/hls-downloader/" + runId + ".ts";
