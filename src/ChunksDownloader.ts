@@ -17,6 +17,8 @@ export class ChunksDownloader {
         private concurrency: number,
         private fromEnd: number,
         private segmentDirectory: string,
+        private timeoutDuration: number = 60,
+        private playlistRefreshInterval: number = 5,
     ) {
         this.queue = new PQueue({
             concurrency: this.concurrency,
@@ -35,7 +37,7 @@ export class ChunksDownloader {
     private async refreshPlayList(): Promise<void> {
         const playlist = await this.loadPlaylist();
 
-        const interval = playlist.targetDuration || 5;
+        const interval = playlist.targetDuration || this.playlistRefreshInterval;
         const segments = playlist.segments!.map((s) => new URL(s.uri, this.playlistUrl).href);
 
         this.refreshHandle = setTimeout(() => this.refreshPlayList(), interval * 1000);
@@ -66,7 +68,7 @@ export class ChunksDownloader {
         if (this.timeoutHandle) {
             clearTimeout(this.timeoutHandle);
         }
-        this.timeoutHandle = setTimeout(() => this.timeout(), 60 * 1000);
+        this.timeoutHandle = setTimeout(() => this.timeout(), this.timeoutDuration * 1000);
     }
 
     private timeout(): void {
