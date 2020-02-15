@@ -1,5 +1,3 @@
-// tslint:disable:max-line-length
-
 import * as m3u8 from "m3u8-parser";
 import { get } from "./http";
 
@@ -26,7 +24,7 @@ export class StreamChooser {
 
     public isMaster(): boolean {
         if (!this.manifest) {
-            throw Error("You need to call 'load' before 'getPlaylistUrl'");
+            throw Error("You need to call 'load' before 'isMaster'");
         }
 
         return this.manifest.playlists && this.manifest.playlists.length > 0 || false;
