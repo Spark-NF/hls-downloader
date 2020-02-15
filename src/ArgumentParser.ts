@@ -1,9 +1,11 @@
-import * as args from "commander";
+import * as commander from "commander";
 import * as packageJson from "../package.json";
 import { IConfig } from "./Config.js";
 
 export class ArgumentParser {
     public parse(argv: string[]): IConfig | false {
+        const args = new commander.Command();
+
         // Setup
         args
             .version(packageJson.version)
