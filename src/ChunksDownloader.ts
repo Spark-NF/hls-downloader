@@ -45,7 +45,7 @@ export class ChunksDownloader {
         } else {
             const index = segments.indexOf(this.lastSegment);
             if (index < 0) {
-                console.error("wut wut missing segment");
+                console.error("Could not find last segment in playlist");
                 toLoad = segments;
             } else if (index === segments.length - 1) {
                 console.log("No new segments since last check");
