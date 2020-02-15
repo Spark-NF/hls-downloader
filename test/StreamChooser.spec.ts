@@ -27,13 +27,13 @@ jest.mock("../src/http", () => ({
 }));
 
 describe("StreamChooser", () => {
-    function setUpGet(src?: string) {
+    function setUpGet(src?: string): void {
         (http.get as any).mockResolvedValue(src);
     }
 
     it("The constructor shouldn't do anything", () => {
         setUpGet();
-        const stream = new StreamChooser(MASTER_URL);
+        new StreamChooser(MASTER_URL);
 
         expect(http.get).not.toBeCalled();
     });

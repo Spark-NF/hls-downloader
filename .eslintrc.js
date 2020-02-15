@@ -10,7 +10,6 @@ module.exports = {
     },
     "parser": "@typescript-eslint/parser",
     "parserOptions": {
-        "project": "tsconfig.json",
         "sourceType": "module"
     },
     "plugins": [
@@ -21,5 +20,16 @@ module.exports = {
         "@typescript-eslint/interface-name-prefix": ["error", { "prefixWithI": "always" }],
         "@typescript-eslint/no-non-null-assertion": "off",
         "indent": ["error"]
-    }
+    },
+    "overrides": [
+        {
+            "files": ["test/**/*"],
+            "env": {
+                "jest": true,
+            },
+            "rules": {
+                "@typescript-eslint/no-explicit-any": "off",
+            }
+        }
+    ]
 };

@@ -8,7 +8,7 @@
         "hls-downloader": "dist/cli.js"
     },
     "scripts": {
-        "lint": "eslint -c .eslintrc.js --ext ts src",
+        "lint": "eslint -c .eslintrc.js --ext ts src test",
         "build": "rollup -c",
         "watch": "rollup -cw",
         "test": "jest --coverage"
