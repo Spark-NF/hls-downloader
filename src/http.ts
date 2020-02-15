@@ -1,24 +1,16 @@
 import * as fs from "fs";
-import * as request from "request";
+import axios from "axios";
 
-export function get(url: string): Promise<string> {
-    return new Promise<string>((resolve, reject) => {
-        request.get(url, (error: string, response: request.Response, body: string) => {
-            if (error) {
-                reject(error);
-            } else {
-                resolve(body);
-            }
-        });
-    });
+export async function get(url: string): Promise<string> {
+    const response = await axios.get(url, { responseType: "text" });
+    return response.data;
 }
 
-export function download(url: string, file: string): Promise<void> {
+export async function download(url: string, file: string): Promise<void> {
+    const response = await axios(url, { responseType: "stream" });
+    const stream = response.data.pipe(fs.createWriteStream(file));
     return new Promise((resolve, reject) => {
-        request
-            .get(url)
-            .on("error", reject)
-            .pipe(fs.createWriteStream(file))
-            .on("finish", resolve);
+        stream.on("finish", resolve);
+        stream.on("error", reject);
     });
 }
