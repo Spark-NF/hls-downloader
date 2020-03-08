@@ -2,7 +2,7 @@ import * as m3u8 from "m3u8-parser";
 import PQueue from "p-queue";
 import * as path from "path";
 import { URL } from "url";
-import { download, get } from "./http";
+import { download, get, HttpHeaders } from "./http";
 
 export class ChunksDownloader {
     private queue: PQueue;
@@ -20,6 +20,7 @@ export class ChunksDownloader {
         private segmentDirectory: string,
         private timeoutDuration: number = 60,
         private playlistRefreshInterval: number = 5,
+        private httpHeaders?: HttpHeaders,
     ) {
         this.queue = new PQueue({
             concurrency: this.concurrency,
@@ -81,7 +82,7 @@ export class ChunksDownloader {
     }
 
     private async loadPlaylist(): Promise<m3u8.Manifest> {
-        const response = await get(this.playlistUrl);
+        const response = await get(this.playlistUrl, this.httpHeaders);
 
         const parser = new m3u8.Parser();
         parser.push(response);
@@ -98,7 +99,7 @@ export class ChunksDownloader {
         filename = filename.substr(slash + 1);
 
         // Download file
-        await download(segmentUrl, path.join(this.segmentDirectory, filename));
+        await download(segmentUrl, path.join(this.segmentDirectory, filename), this.httpHeaders);
         console.log("Received:", segmentUrl);
     }
 }

@@ -1,6 +1,7 @@
 import * as http from "../src/http";
 import { StreamChooser } from "../src/StreamChooser";
 
+const HTTP_HEADERS = {};
 const MASTER_URL = "https://github.com/Spark-NF/hls-downloader"
 
 const M3U8_MASTER = `#EXTM3U
@@ -48,10 +49,10 @@ describe("StreamChooser", () => {
     it("Load should make an HTTP call to the stream", async () => {
         setUpGet();
 
-        const stream = new StreamChooser(MASTER_URL);
+        const stream = new StreamChooser(MASTER_URL, HTTP_HEADERS);
         await stream.load();
 
-        expect(http.get).toBeCalledWith(MASTER_URL);
+        expect(http.get).toBeCalledWith(MASTER_URL, HTTP_HEADERS);
     });
 
     it("Fail on invalid playlists", async () => {

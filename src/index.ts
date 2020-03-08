@@ -20,7 +20,7 @@ export async function download(config: IConfig): Promise<void> {
     fs.mkdirpSync(segmentsDir);
 
     // Choose proper stream
-    const streamChooser = new StreamChooser(config.streamUrl);
+    const streamChooser = new StreamChooser(config.streamUrl, config.httpHeaders);
     if (!await streamChooser.load()) {
         return;
     }
@@ -35,6 +35,9 @@ export async function download(config: IConfig): Promise<void> {
         config.concurrency || 1,
         config.fromEnd || 1,
         segmentsDir,
+        undefined,
+        undefined,
+        config.httpHeaders,
     );
     await chunksDownloader.start();
 

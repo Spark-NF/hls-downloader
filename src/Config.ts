@@ -1,3 +1,5 @@
+import { HttpHeaders } from "./http";
+
 export interface IConfig {
     mergeUsingFfmpeg?: boolean;
     concurrency?: number;
@@ -7,4 +9,5 @@ export interface IConfig {
     segmentsDir?: string;
     mergedSegmentsFile?: string;
     outputFile: string;
+    httpHeaders?: HttpHeaders;
 }

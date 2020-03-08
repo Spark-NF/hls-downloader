@@ -1,6 +1,16 @@
 import * as commander from "commander";
 import * as packageJson from "../package.json";
 import { IConfig } from "./Config.js";
+import { HttpHeaders } from "./http.js";
+
+function parseHeaders(value: string, previous: HttpHeaders): HttpHeaders {
+    const pos = value.indexOf(":");
+    if (pos > 0) {
+        const key = value.substr(0, pos).trim();
+        previous[key] = value.substr(pos + 1).trim();
+    }
+    return previous;
+}
 
 export class ArgumentParser {
     public parse(argv: string[]): IConfig | false {
@@ -16,6 +26,7 @@ export class ArgumentParser {
             .option("-c, --concurrency [threads]", "How many threads to use for segments download", parseInt, 1)
             .option("-q, --quality [quality]", "Stream quality when possible (worst, best, or max bandwidth)", "best")
             .option("-o, --output-file [file]", "Target file to download the stream to")
+            .option("-h, --header [header]", "Header to pass to the HTTP requests", parseHeaders, {})
             .parse(argv);
 
         // Varlidate a few arguments
@@ -42,6 +53,7 @@ export class ArgumentParser {
             quality: args.quality,
             segmentsDir: args.segmentsDir,
             streamUrl: args.args[0],
+            httpHeaders: args.header,
         };
     }
 }

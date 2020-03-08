@@ -67,6 +67,10 @@ _* only mandatory if passing a master playlist stream URL_
 Target file to download the stream to.
 If it already exists, it will be overwritten.
 
+#### `-h`, `--header`, `httpHeaders`
+Headers to use when making HTTP requests.
+On the CLI, the header can be repeated. Format is "Name: value".
+
 ## Authors
 * [Spark-NF](https://github.com/Spark-NF)
 

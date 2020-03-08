@@ -1,16 +1,17 @@
 import * as m3u8 from "m3u8-parser";
 import { URL } from "url";
-import { get } from "./http";
+import { get, HttpHeaders } from "./http";
 
 export class StreamChooser {
     private manifest?: m3u8.Manifest;
 
     constructor(
         private streamUrl: string,
+        private httpHeaders?: HttpHeaders,
     ) {}
 
     public async load(): Promise<boolean> {
-        const streams = await get(this.streamUrl);
+        const streams = await get(this.streamUrl, this.httpHeaders);
 
         const parser = new m3u8.Parser();
         parser.push(streams);

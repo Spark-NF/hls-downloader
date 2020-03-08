@@ -62,4 +62,17 @@ describe("ArgumentParser", () => {
             expect(console.error).toBeCalledWith("Invalid quality provided:", "test_failure");
         });
     });
+
+    it("Should parse HTTP headers", () => {
+        const parser = new ArgumentParser();
+        const ret = parser.parse(["node", "test.js", "-o", "test.mp4", "-h", "Accept: application/json", "-h", "Content-Type: application/xml", "http://test"]);
+
+        expect(ret).not.toBeFalsy();
+
+        const config = ret as IConfig;
+        expect(config.httpHeaders).toEqual({
+            "Accept": "application/json",
+            "Content-Type": "application/xml",
+        });
+    });
 });
