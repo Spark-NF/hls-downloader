@@ -28,32 +28,33 @@ export class ArgumentParser {
             .option("-o, --output-file [file]", "Target file to download the stream to")
             .option("-h, --header [header]", "Header to pass to the HTTP requests", parseHeaders, {})
             .parse(argv);
+        const opts = args.opts();
 
         // Varlidate a few arguments
         if (args.args.length !== 1) {
             console.error("You must provide exactly one URL");
             return false;
         }
-        if (args.quality && !["worst", "best"].includes(args.quality) && !parseInt(args.quality, 10)) {
-            console.error("Invalid quality provided:", args.quality);
+        if (opts.quality && !["worst", "best"].includes(opts.quality) && !parseInt(opts.quality, 10)) {
+            console.error("Invalid quality provided:", opts.quality);
             return false;
         }
-        if (!args.outputFile) {
+        if (!opts.outputFile) {
             console.error("You must provide an output file");
             return false;
         }
 
         // Read arguments to variables
         return {
-            concurrency: args.concurrency,
-            fromEnd: args.fromEnd,
-            mergeUsingFfmpeg: args.ffmpegMerge,
-            mergedSegmentsFile: args.mergedSegmentsFile,
-            outputFile: args.outputFile,
-            quality: args.quality,
-            segmentsDir: args.segmentsDir,
+            concurrency: opts.concurrency,
+            fromEnd: opts.fromEnd,
+            httpHeaders: opts.header,
+            mergeUsingFfmpeg: opts.ffmpegMerge,
+            mergedSegmentsFile: opts.mergedSegmentsFile,
+            outputFile: opts.outputFile,
+            quality: opts.quality,
+            segmentsDir: opts.segmentsDir,
             streamUrl: args.args[0],
-            httpHeaders: args.header,
         };
     }
 }
