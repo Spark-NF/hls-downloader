@@ -17,7 +17,6 @@ module.exports = {
     ],
     "rules": {
         "@typescript-eslint/explicit-function-return-type": ["warn", { allowExpressions: true }],
-        "@typescript-eslint/interface-name-prefix": ["error", { "prefixWithI": "always" }],
         "@typescript-eslint/no-non-null-assertion": "off",
         "indent": ["error"]
     },
