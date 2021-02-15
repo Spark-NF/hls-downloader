@@ -21,7 +21,7 @@ hls-downloader -q best -c 5 -o video.mp4 "https://......./stream.m3u8"
 
 ### API
 ```js
-import { download } from "node-hls-downloader";
+const download = require("node-hls-downloader").download;
 
 await download({
     quality: "best",
@@ -30,6 +30,8 @@ await download({
     streamUrl: "https://......./stream.m3u8",
 });
 ```
+
+TypeScript is also supported, with types already provided.
 
 ### Options
 _Note: options marked with 🔒 are mandatory._
