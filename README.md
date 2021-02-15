@@ -19,6 +19,9 @@ hls-downloader [-V] [-h] [-q QUALITY] -o FILE stream_url
 hls-downloader -q best -c 5 -o video.mp4 "https://......./stream.m3u8"
 ```
 
+### Dependencies
+You need to have [FFMPEG](https://ffmpeg.org/) installed, even with the "merge using FFMPEG" feature disabled, as FFMPEG is still used to transmux the merged TS file into an MP4 file.
+
 ### API
 ```js
 const download = require("node-hls-downloader").download;
@@ -71,7 +74,7 @@ If it already exists, it will be overwritten.
 
 #### `-h`, `--header`, `httpHeaders`
 Headers to use when making HTTP requests.
-On the CLI, the header can be repeated. Format is "Name: value".
+On the CLI, the header argument can be repeated. Format is "Name: value".
 
 ## Authors
 * [Spark-NF](https://github.com/Spark-NF)
