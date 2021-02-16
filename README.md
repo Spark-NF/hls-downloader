@@ -46,6 +46,8 @@ The URL to the stream (either the master file or a playlist).
 Download the stream as a live feed, refreshing the playlist and downloading only new segments.
 Automatically stops when no new segments are found after a while.
 
+* Default: `false`
+
 #### `--ffmpeg-merge`, `mergeUsingFfmpeg`
 Merge TS segments using FFMPEG instead of basic concatenation.
 Not recommended, but you can use it if stuttering issues occur when merging the TS segments.
