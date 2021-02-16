@@ -50,6 +50,7 @@ export class ArgumentParser {
             concurrency: opts.concurrency,
             fromEnd: opts.fromEnd,
             httpHeaders: opts.header,
+            live: opts.live,
             mergeUsingFfmpeg: opts.ffmpegMerge,
             mergedSegmentsFile: opts.mergedSegmentsFile,
             outputFile: opts.outputFile,
