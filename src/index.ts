@@ -1,7 +1,8 @@
 import * as fs from "fs-extra";
 import * as os from "os";
 import * as path from "path";
-import { ChunksDownloader } from "./ChunksDownloader";
+import { ChunksLiveDownloader } from "./ChunksLiveDownloader";
+import { ChunksStaticDownloader } from "./ChunksStaticDownloader";
 import { IConfig as IIConfig } from "./Config";
 import { mergeChunks as mergeChunksFfmpeg, transmuxTsToMp4 } from "./ffmpeg";
 import { mergeFiles as mergeChunksStream } from "./stream";
@@ -30,15 +31,21 @@ export async function download(config: IConfig): Promise<void> {
     }
 
     // Start download
-    const chunksDownloader = new ChunksDownloader(
-        playlistUrl,
-        config.concurrency || 1,
-        config.fromEnd || 1,
-        segmentsDir,
-        undefined,
-        undefined,
-        config.httpHeaders,
-    );
+    const chunksDownloader = config.live
+        ? new ChunksLiveDownloader(
+            playlistUrl,
+            config.concurrency || 1,
+            config.fromEnd || 9999,
+            segmentsDir,
+            undefined,
+            undefined,
+            config.httpHeaders,
+        ) :  new ChunksStaticDownloader(
+            playlistUrl,
+            config.concurrency || 1,
+            segmentsDir,
+            config.httpHeaders,
+        );
     await chunksDownloader.start();
 
     // Get all segments

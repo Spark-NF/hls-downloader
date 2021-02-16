@@ -1,7 +1,7 @@
 import * as fs from "fs";
 import * as http from "../src/http";
 import * as tempy from "tempy";
-import { ChunksDownloader } from "../src/ChunksDownloader";
+import { ChunksLiveDownloader } from "../src/ChunksLiveDownloader";
 
 const PLAYLIST_URL = "https://test.com/playlist.m3u8"
 
@@ -26,11 +26,11 @@ const PLAYLIST_3 = `#EXTM3U
 segment3`;
 
 jest.mock("../src/http", () => ({
-    get: jest.fn(),
     download: jest.fn(),
+    get: jest.fn(),
 }));
 
-describe("ChunksDownloader", () => {
+describe("ChunksLiveDownloader", () => {
     it("Works properly", async () => {
         console.log = jest.fn();
 
@@ -43,10 +43,10 @@ describe("ChunksDownloader", () => {
         });
         (http.download as jest.Mock).mockImplementation((url: string, file: string) => {
             fs.writeFileSync(file, url + "\n");
-        })
+        });
 
         const dir = tempy.directory();
-        const downloader = new ChunksDownloader(PLAYLIST_URL, 1, 5, dir, 0.1, 0.05);
+        const downloader = new ChunksLiveDownloader(PLAYLIST_URL, 1, 5, dir, 0.1, 0.05);
         await downloader.start();
 
         const files = fs.readdirSync(dir);

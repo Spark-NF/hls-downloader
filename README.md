@@ -42,6 +42,10 @@ _Note: options marked with 🔒 are mandatory._
 #### `stream_url`, `streamUrl` 🔒
 The URL to the stream (either the master file or a playlist).
 
+#### `--live`, `live`
+Download the stream as a live feed, refreshing the playlist and downloading only new segments.
+Automatically stops when no new segments are found after a while.
+
 #### `--ffmpeg-merge`, `mergeUsingFfmpeg`
 Merge TS segments using FFMPEG instead of basic concatenation.
 Not recommended, but you can use it if stuttering issues occur when merging the TS segments.

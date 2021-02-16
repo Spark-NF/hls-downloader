@@ -20,6 +20,7 @@ export class ArgumentParser {
         args
             .version(packageJson.version)
             .usage("[options] <url>")
+            .option("--live", "Download the stream as a live feed", false)
             .option("--ffmpeg-merge", "Merge TS segments using FFMPEG", false)
             .option("--segments-dir [dir]", "Where the TS segments will be stored")
             .option("--merged-segments-file [file]", "Location of the merged TS segments file")

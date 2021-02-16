@@ -1,26 +1,19 @@
 import * as m3u8 from "m3u8-parser";
 import PQueue from "p-queue";
 import * as path from "path";
-import { URL } from "url";
 import { download, get, HttpHeaders } from "./http";
 
-export class ChunksDownloader {
-    private queue: PQueue;
-    private lastSegment?: string;
+export abstract class ChunksDownloader {
+    protected queue: PQueue;
 
-    private resolve?: () => void;
-    private reject?: () => void;
-    private timeoutHandle?: NodeJS.Timeout;
-    private refreshHandle?: NodeJS.Timeout;
+    protected resolve?: () => void;
+    protected reject?: () => void;
 
     constructor(
-        private playlistUrl: string,
-        private concurrency: number,
-        private fromEnd: number,
-        private segmentDirectory: string,
-        private timeoutDuration: number = 60,
-        private playlistRefreshInterval: number = 5,
-        private httpHeaders?: HttpHeaders,
+        protected playlistUrl: string,
+        protected concurrency: number,
+        protected segmentDirectory: string,
+        protected httpHeaders?: HttpHeaders,
     ) {
         this.queue = new PQueue({
             concurrency: this.concurrency,
@@ -36,52 +29,9 @@ export class ChunksDownloader {
         });
     }
 
-    private async refreshPlayList(): Promise<void> {
-        const playlist = await this.loadPlaylist();
+    protected abstract refreshPlayList(): Promise<void>;
 
-        const interval = playlist.targetDuration || this.playlistRefreshInterval;
-        const segments = playlist.segments!.map((s) => new URL(s.uri, this.playlistUrl).href);
-
-        this.refreshHandle = setTimeout(() => this.refreshPlayList(), interval * 1000);
-
-        let toLoad: string[] = [];
-        if (!this.lastSegment) {
-            toLoad = segments.slice(segments.length - this.fromEnd);
-        } else {
-            const index = segments.indexOf(this.lastSegment);
-            if (index < 0) {
-                console.error("Could not find last segment in playlist");
-                toLoad = segments;
-            } else if (index === segments.length - 1) {
-                console.log("No new segments since last check");
-                return;
-            } else {
-                toLoad = segments.slice(index + 1);
-            }
-        }
-
-        this.lastSegment = toLoad[toLoad.length - 1];
-        for (const uri of toLoad) {
-            console.log("Queued:", uri);
-            this.queue.add(() => this.downloadSegment(uri));
-        }
-
-        // Timeout after X seconds without new segment
-        if (this.timeoutHandle) {
-            clearTimeout(this.timeoutHandle);
-        }
-        this.timeoutHandle = setTimeout(() => this.timeout(), this.timeoutDuration * 1000);
-    }
-
-    private timeout(): void {
-        console.log("No new segment for a while, stopping");
-        if (this.refreshHandle) {
-            clearTimeout(this.refreshHandle);
-        }
-        this.resolve!();
-    }
-
-    private async loadPlaylist(): Promise<m3u8.Manifest> {
+    protected async loadPlaylist(): Promise<m3u8.Manifest> {
         const response = await get(this.playlistUrl, this.httpHeaders);
 
         const parser = new m3u8.Parser();
@@ -91,7 +41,7 @@ export class ChunksDownloader {
         return parser.manifest;
     }
 
-    private async downloadSegment(segmentUrl: string): Promise<void> {
+    protected async downloadSegment(segmentUrl: string): Promise<void> {
         // Get filename from URL
         const question = segmentUrl.indexOf("?");
         let filename = question > 0 ? segmentUrl.substr(0, question) : segmentUrl;
