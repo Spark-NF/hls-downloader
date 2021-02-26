@@ -50,7 +50,9 @@ export async function download(config: IConfig): Promise<void> {
 
     // Get all segments
     const segments = fs.readdirSync(segmentsDir).map((f) => segmentsDir + f);
-    segments.sort();
+    segments.sort((a: string, b: string) => {
+        return a.localeCompare(b, undefined, { numeric: true, sensitivity: 'base' })
+    });
 
     // Merge TS files
     const mergeFunction = config.mergeUsingFfmpeg ? mergeChunksFfmpeg : mergeChunksStream;
