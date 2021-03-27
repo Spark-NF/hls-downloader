@@ -18,6 +18,7 @@ module.exports = {
     "rules": {
         "@typescript-eslint/explicit-function-return-type": ["warn", { allowExpressions: true }],
         "@typescript-eslint/no-non-null-assertion": "off",
+        "@typescript-eslint/no-explicit-any": "off",
         "indent": ["error"]
     },
     "overrides": [
@@ -25,9 +26,6 @@ module.exports = {
             "files": ["test/**/*"],
             "env": {
                 "jest": true,
-            },
-            "rules": {
-                "@typescript-eslint/no-explicit-any": "off",
             }
         }
     ]

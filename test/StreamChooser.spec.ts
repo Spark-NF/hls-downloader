@@ -1,5 +1,6 @@
 import * as http from "../src/http";
 import { StreamChooser } from "../src/StreamChooser";
+import { ILogger } from "../src/Logger";
 
 const HTTP_HEADERS = {};
 const MASTER_URL = "https://github.com/Spark-NF/hls-downloader"
@@ -28,19 +29,24 @@ jest.mock("../src/http", () => ({
 }));
 
 describe("StreamChooser", () => {
+    let logger: ILogger;
+    beforeEach(() => {
+        logger = { log: jest.fn(), error: jest.fn() };
+    });
+
     function setUpGet(src?: string): void {
         (http.get as any).mockResolvedValue(src);
     }
 
     it("The constructor shouldn't do anything", () => {
         setUpGet();
-        new StreamChooser(MASTER_URL);
+        new StreamChooser(logger, MASTER_URL);
 
         expect(http.get).not.toBeCalled();
     });
 
     it("Throws when not loaded first", async () => {
-        const stream = new StreamChooser(MASTER_URL);
+        const stream = new StreamChooser(logger, MASTER_URL);
 
         expect(() => stream.isMaster()).toThrow("You need to call 'load' before 'isMaster'");
         expect(() => stream.getPlaylistUrl()).toThrow("You need to call 'load' before 'getPlaylistUrl'");
@@ -49,7 +55,7 @@ describe("StreamChooser", () => {
     it("Load should make an HTTP call to the stream", async () => {
         setUpGet();
 
-        const stream = new StreamChooser(MASTER_URL, HTTP_HEADERS);
+        const stream = new StreamChooser(logger, MASTER_URL, HTTP_HEADERS);
         await stream.load();
 
         expect(http.get).toBeCalledWith(MASTER_URL, HTTP_HEADERS);
@@ -57,14 +63,14 @@ describe("StreamChooser", () => {
 
     it("Fail on invalid playlists", async () => {
         setUpGet("");
-        const stream = new StreamChooser(MASTER_URL);
+        const stream = new StreamChooser(logger, MASTER_URL);
 
         expect(await stream.load()).toBe(false);
     });
 
     it("Return the url directly for playlists", async () => {
         setUpGet(M3U8_PLAYLIST);
-        const stream = new StreamChooser(MASTER_URL);
+        const stream = new StreamChooser(logger, MASTER_URL);
 
         expect(await stream.load()).toBe(true);
         expect(stream.isMaster()).toBe(false);
@@ -73,7 +79,7 @@ describe("StreamChooser", () => {
 
     it("Return the best playlist for master", async () => {
         setUpGet(M3U8_MASTER);
-        const stream = new StreamChooser(MASTER_URL);
+        const stream = new StreamChooser(logger, MASTER_URL);
 
         expect(await stream.load()).toBe(true);
         expect(stream.isMaster()).toBe(true);
@@ -82,7 +88,7 @@ describe("StreamChooser", () => {
 
     it("Returns the worst playlist for master", async () => {
         setUpGet(M3U8_MASTER);
-        const stream = new StreamChooser(MASTER_URL);
+        const stream = new StreamChooser(logger, MASTER_URL);
 
         expect(await stream.load()).toBe(true);
         expect(stream.isMaster()).toBe(true);
@@ -91,7 +97,7 @@ describe("StreamChooser", () => {
 
     it("Returns the best playlist for master under a given bandwidth", async () => {
         setUpGet(M3U8_MASTER);
-        const stream = new StreamChooser(MASTER_URL);
+        const stream = new StreamChooser(logger, MASTER_URL);
 
         expect(await stream.load()).toBe(true);
         expect(stream.isMaster()).toBe(true);
@@ -99,14 +105,12 @@ describe("StreamChooser", () => {
     });
 
     it("Fails for master if no quality is provided", async () => {
-        console.error = jest.fn();
-
         setUpGet(M3U8_MASTER);
-        const stream = new StreamChooser(MASTER_URL);
+        const stream = new StreamChooser(logger, MASTER_URL);
 
         expect(await stream.load()).toBe(true);
         expect(stream.isMaster()).toBe(true);
         expect(stream.getPlaylistUrl()).toBe(false);
-        expect(console.error).toBeCalledWith("You need to provide a quality with a master playlist");
+        expect(logger.error).toBeCalledWith("You need to provide a quality with a master playlist");
     });
 });

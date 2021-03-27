@@ -82,6 +82,12 @@ If it already exists, it will be overwritten.
 Headers to use when making HTTP requests.
 On the CLI, the header argument can be repeated. Format is "Name: value".
 
+#### `--quiet`, `logger`
+In CLI, the quiet flag will disable all output except errors.
+Using the API, you can provide a logger config, which is either `null` to disable logging  completely, a function taking any number of arguments, or an object with two members, `log` and `error`, each being a function taking any number of arguments.
+
+* Default: `false` in CLI, `console` in API
+
 ## Authors
 * [Spark-NF](https://github.com/Spark-NF)
 

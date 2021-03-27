@@ -28,6 +28,7 @@ export class ArgumentParser {
             .option("-q, --quality [quality]", "Stream quality when possible (worst, best, or max bandwidth)", "best")
             .option("-o, --output-file [file]", "Target file to download the stream to")
             .option("-h, --header [header]", "Header to pass to the HTTP requests", parseHeaders, {})
+            .option("--quiet", "Don't show trivial log messages", false)
             .parse(argv);
         const opts = args.opts();
 
@@ -57,6 +58,10 @@ export class ArgumentParser {
             quality: opts.quality,
             segmentsDir: opts.segmentsDir,
             streamUrl: args.args[0],
+            logger: opts.quiet ? {
+                log: () => { /* no-op */ },
+                error: console.error,
+            } : undefined,
         };
     }
 }

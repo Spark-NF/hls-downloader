@@ -2,6 +2,7 @@ import * as m3u8 from "m3u8-parser";
 import PQueue from "p-queue";
 import * as path from "path";
 import { download, get, HttpHeaders } from "./http";
+import { ILogger } from "./Logger";
 
 export abstract class ChunksDownloader {
     protected queue: PQueue;
@@ -10,6 +11,7 @@ export abstract class ChunksDownloader {
     protected reject?: () => void;
 
     constructor(
+        protected logger: ILogger,
         protected playlistUrl: string,
         protected concurrency: number,
         protected segmentDirectory: string,
@@ -50,6 +52,6 @@ export abstract class ChunksDownloader {
 
         // Download file
         await download(segmentUrl, path.join(this.segmentDirectory, filename), this.httpHeaders);
-        console.log("Received:", segmentUrl);
+        this.logger.log("Received:", segmentUrl);
     }
 }

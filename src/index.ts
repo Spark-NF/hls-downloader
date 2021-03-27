@@ -7,10 +7,13 @@ import { IConfig as IIConfig } from "./Config";
 import { mergeChunks as mergeChunksFfmpeg, transmuxTsToMp4 } from "./ffmpeg";
 import { mergeFiles as mergeChunksStream } from "./stream";
 import { StreamChooser } from "./StreamChooser.js";
+import { buildLogger, ILogger } from "./Logger";
 
 export type IConfig = IIConfig;
 
 export async function download(config: IConfig): Promise<void> {
+    const logger: ILogger = buildLogger(config.logger);
+
     // Temporary files
     const runId = Date.now();
     const mergedSegmentsFile = config.mergedSegmentsFile || os.tmpdir() + "/hls-downloader/" + runId + ".ts";
@@ -21,7 +24,7 @@ export async function download(config: IConfig): Promise<void> {
     fs.mkdirpSync(segmentsDir);
 
     // Choose proper stream
-    const streamChooser = new StreamChooser(config.streamUrl, config.httpHeaders);
+    const streamChooser = new StreamChooser(logger, config.streamUrl, config.httpHeaders);
     if (!await streamChooser.load()) {
         return;
     }
@@ -33,6 +36,7 @@ export async function download(config: IConfig): Promise<void> {
     // Start download
     const chunksDownloader = config.live
         ? new ChunksLiveDownloader(
+            logger,
             playlistUrl,
             config.concurrency || 1,
             config.fromEnd || 9999,
@@ -41,6 +45,7 @@ export async function download(config: IConfig): Promise<void> {
             undefined,
             config.httpHeaders,
         ) :  new ChunksStaticDownloader(
+            logger,
             playlistUrl,
             config.concurrency || 1,
             segmentsDir,
@@ -55,11 +60,13 @@ export async function download(config: IConfig): Promise<void> {
     });
 
     // Merge TS files
-    const mergeFunction = config.mergeUsingFfmpeg ? mergeChunksFfmpeg : mergeChunksStream;
+    const mergeFunction = config.mergeUsingFfmpeg
+        ? (segments: string[], merged: string) => mergeChunksFfmpeg(logger, segments, merged)
+        : mergeChunksStream;
     await mergeFunction(segments, mergedSegmentsFile);
 
     // Transmux
-    await transmuxTsToMp4(mergedSegmentsFile, config.outputFile);
+    await transmuxTsToMp4(logger, mergedSegmentsFile, config.outputFile);
 
     // Delete temporary files
     fs.remove(segmentsDir);

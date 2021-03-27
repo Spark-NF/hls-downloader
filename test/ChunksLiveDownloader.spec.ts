@@ -32,7 +32,7 @@ jest.mock("../src/http", () => ({
 
 describe("ChunksLiveDownloader", () => {
     it("Works properly", async () => {
-        console.log = jest.fn();
+        const logger = { log: jest.fn(), error: jest.fn() };
 
         const playlist = [PLAYLIST_1, PLAYLIST_2, PLAYLIST_3];
         let currentPlaylist = 0;
@@ -46,7 +46,7 @@ describe("ChunksLiveDownloader", () => {
         });
 
         const dir = tempy.directory();
-        const downloader = new ChunksLiveDownloader(PLAYLIST_URL, 1, 5, dir, 0.1, 0.05);
+        const downloader = new ChunksLiveDownloader(logger, PLAYLIST_URL, 1, 5, dir, 0.1, 0.05);
         await downloader.start();
 
         const files = fs.readdirSync(dir);

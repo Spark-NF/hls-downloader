@@ -1,11 +1,13 @@
 import * as m3u8 from "m3u8-parser";
 import { URL } from "url";
 import { get, HttpHeaders } from "./http";
+import { ILogger } from "./Logger";
 
 export class StreamChooser {
     private manifest?: m3u8.Manifest;
 
     constructor(
+        private logger: ILogger,
         private streamUrl: string,
         private httpHeaders?: HttpHeaders,
     ) {}
@@ -44,7 +46,7 @@ export class StreamChooser {
 
         // You need a quality parameter with a master playlist
         if (!maxBandwidth) {
-            console.error("You need to provide a quality with a master playlist");
+            this.logger.error("You need to provide a quality with a master playlist");
             return false;
         }
 
@@ -62,7 +64,7 @@ export class StreamChooser {
             return new URL(uri, this.streamUrl).href;
         }
 
-        console.error("No stream or playlist found in URL:", this.streamUrl);
+        this.logger.error("No stream or playlist found in URL:", this.streamUrl);
         return false;
     }
 }

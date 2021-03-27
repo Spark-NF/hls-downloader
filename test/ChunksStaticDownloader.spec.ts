@@ -22,7 +22,7 @@ jest.mock("../src/http", () => ({
 
 describe("ChunksStaticDownloader", () => {
     it("Works properly", async () => {
-        console.log = jest.fn();
+        const logger = { log: jest.fn(), error: jest.fn() };
 
         (http.get as jest.Mock).mockReturnValue(PLAYLIST);
         (http.download as jest.Mock).mockImplementation((url: string, file: string) => {
@@ -30,7 +30,7 @@ describe("ChunksStaticDownloader", () => {
         });
 
         const dir = tempy.directory();
-        const downloader = new ChunksStaticDownloader(PLAYLIST_URL, 1, dir);
+        const downloader = new ChunksStaticDownloader(logger, PLAYLIST_URL, 1, dir);
         await downloader.start();
 
         const files = fs.readdirSync(dir);

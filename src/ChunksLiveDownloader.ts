@@ -1,6 +1,7 @@
 import { URL } from "url";
 import { ChunksDownloader } from "./ChunksDownloader";
 import { HttpHeaders } from "./http";
+import { ILogger } from "./Logger";
 
 export class ChunksLiveDownloader extends ChunksDownloader {
     private lastSegment?: string;
@@ -9,6 +10,7 @@ export class ChunksLiveDownloader extends ChunksDownloader {
     private refreshHandle?: NodeJS.Timeout;
 
     constructor(
+        logger: ILogger,
         playlistUrl: string,
         concurrency: number,
         private fromEnd: number,
@@ -17,7 +19,7 @@ export class ChunksLiveDownloader extends ChunksDownloader {
         private playlistRefreshInterval: number = 5,
         httpHeaders?: HttpHeaders,
     ) {
-        super(playlistUrl, concurrency, segmentDirectory, httpHeaders);
+        super(logger, playlistUrl, concurrency, segmentDirectory, httpHeaders);
     }
 
     protected async refreshPlayList(): Promise<void> {
@@ -34,10 +36,10 @@ export class ChunksLiveDownloader extends ChunksDownloader {
         } else {
             const index = segments.indexOf(this.lastSegment);
             if (index < 0) {
-                console.error("Could not find last segment in playlist");
+                this.logger.error("Could not find last segment in playlist");
                 toLoad = segments;
             } else if (index === segments.length - 1) {
-                console.log("No new segments since last check");
+                this.logger.log("No new segments since last check");
                 return;
             } else {
                 toLoad = segments.slice(index + 1);
@@ -46,7 +48,7 @@ export class ChunksLiveDownloader extends ChunksDownloader {
 
         this.lastSegment = toLoad[toLoad.length - 1];
         for (const uri of toLoad) {
-            console.log("Queued:", uri);
+            this.logger.log("Queued:", uri);
             this.queue.add(() => this.downloadSegment(uri));
         }
 
@@ -58,7 +60,7 @@ export class ChunksLiveDownloader extends ChunksDownloader {
     }
 
     private timeout(): void {
-        console.log("No new segment for a while, stopping");
+        this.logger.log("No new segment for a while, stopping");
         if (this.refreshHandle) {
             clearTimeout(this.refreshHandle);
         }
