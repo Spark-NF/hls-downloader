@@ -22,12 +22,12 @@ export class ArgumentParser {
             .usage("[options] <url>")
             .option("--live", "Download the stream as a live feed", false)
             .option("--ffmpeg-merge", "Merge TS segments using FFMPEG", false)
-            .option("--segments-dir [dir]", "Where the TS segments will be stored")
-            .option("--merged-segments-file [file]", "Location of the merged TS segments file")
-            .option("-c, --concurrency [threads]", "How many threads to use for segments download", parseInt, 1)
-            .option("-q, --quality [quality]", "Stream quality when possible (worst, best, or max bandwidth)", "best")
-            .option("-o, --output-file [file]", "Target file to download the stream to")
-            .option("-h, --header [header]", "Header to pass to the HTTP requests", parseHeaders, {})
+            .option("--segments-dir <dir>", "Where the TS segments will be stored")
+            .option("--merged-segments-file <file>", "Location of the merged TS segments file")
+            .option("-c, --concurrency <threads>", "How many threads to use for segments download", (v: string) => parseInt(v, 10), 1)
+            .option("-q, --quality <quality>", "Stream quality when possible (worst, best, or max bandwidth)", "best")
+            .option("-o, --output-file <file>", "Target file to download the stream to")
+            .option("-h, --header <header>", "Header to pass to the HTTP requests", parseHeaders, {})
             .option("--quiet", "Don't show trivial log messages", false)
             .parse(argv);
         const opts = args.opts();
