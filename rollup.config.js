@@ -1,7 +1,7 @@
-import json from "@rollup/plugin-json"
-import { eslint } from "rollup-plugin-eslint";
-import typescript from "rollup-plugin-typescript2"
-import packageJson from "./package.json"
+import eslint from "@rollup/plugin-eslint";
+import json from "@rollup/plugin-json";
+import typescript from "rollup-plugin-typescript2";
+import packageJson from "./package.json";
 
 const makeConfig = (inputFile, outputFile, external, runnable) => ({
     input: inputFile,
@@ -23,7 +23,7 @@ const makeConfig = (inputFile, outputFile, external, runnable) => ({
             throwOnWarning: true,
             exclude: [
                 "node_modules/**",
-                "*.json",
+                "**/*.json",
             ],
         }),
         typescript({
