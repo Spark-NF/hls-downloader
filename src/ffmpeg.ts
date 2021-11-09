@@ -2,11 +2,11 @@ import * as cp from "child_process";
 import * as fs from "fs";
 import { ILogger } from "./Logger";
 
-async function spawnFfmpeg(logger: ILogger, argss: string[]): Promise<void> {
+async function spawnFfmpeg(logger: ILogger, ffmpegPath: string, argss: string[]): Promise<void> {
     return new Promise((resolve, reject) => {
-        logger.log("Spawning FFMPEG", "ffmpeg", argss.join(" "));
+        logger.log("Spawning FFMPEG", ffmpegPath, argss.join(" "));
 
-        const ffmpeg = cp.spawn("ffmpeg", argss);
+        const ffmpeg = cp.spawn(ffmpegPath, argss);
         ffmpeg.on("message", (msg) => logger.log("ffmpeg message:", msg));
         ffmpeg.on("error", (msg) => {
             logger.error("ffmpeg error:", msg);
@@ -26,7 +26,7 @@ async function spawnFfmpeg(logger: ILogger, argss: string[]): Promise<void> {
     });
 }
 
-export async function mergeChunks(logger: ILogger, segments: string[], outputFile: string): Promise<void> {
+export async function mergeChunks(logger: ILogger, ffmpegPath: string, segments: string[], outputFile: string): Promise<void> {
     // Temporary files
     const segmentsFile = "ffmpeg-input.txt";
 
@@ -43,14 +43,14 @@ export async function mergeChunks(logger: ILogger, segments: string[], outputFil
         "-c", "copy",
         outputFile,
     ];
-    await spawnFfmpeg(logger, mergeArgs);
+    await spawnFfmpeg(logger, ffmpegPath, mergeArgs);
 
     // Clear temporary file
     fs.unlinkSync(segmentsFile);
 }
 
-export async function transmuxTsToMp4(logger: ILogger, inputFile: string, outputFile: string): Promise<void> {
-    await spawnFfmpeg(logger, [
+export async function transmuxTsToMp4(logger: ILogger, ffmpegPath: string, inputFile: string, outputFile: string): Promise<void> {
+    await spawnFfmpeg(logger, ffmpegPath, [
         "-y",
         "-loglevel", "warning",
         "-i", inputFile,

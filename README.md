@@ -54,6 +54,11 @@ Not recommended, but you can use it if stuttering issues occur when merging the 
 
 * Default: `false`
 
+#### `--ffmpeg-path`, `ffmpegPath`
+Path to the FFMPEG binary. Can be useful to target a specific version or install of FFMPEG.
+
+* Default: `ffmpeg`
+
 #### `--segments-dir`, `segmentsDir`
 Where the TS segments will be stored.
 

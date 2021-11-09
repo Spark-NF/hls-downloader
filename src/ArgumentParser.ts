@@ -22,6 +22,7 @@ export class ArgumentParser {
             .usage("[options] <url>")
             .option("--live", "Download the stream as a live feed", false)
             .option("--ffmpeg-merge", "Merge TS segments using FFMPEG", false)
+            .option("--ffmpeg-path", "Path to the FFMPEG binary", "ffmpeg")
             .option("--segments-dir <dir>", "Where the TS segments will be stored")
             .option("--merged-segments-file <file>", "Location of the merged TS segments file")
             .option("-c, --concurrency <threads>", "How many threads to use for segments download", (v: string) => parseInt(v, 10), 1)
@@ -53,6 +54,7 @@ export class ArgumentParser {
             httpHeaders: opts.header,
             live: opts.live,
             mergeUsingFfmpeg: opts.ffmpegMerge,
+            ffmpegPath: opts.ffmpegPath,
             mergedSegmentsFile: opts.mergedSegmentsFile,
             outputFile: opts.outputFile,
             quality: opts.quality,

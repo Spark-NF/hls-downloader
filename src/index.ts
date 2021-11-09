@@ -18,6 +18,7 @@ export async function download(config: IConfig): Promise<void> {
     const runId = Date.now();
     const mergedSegmentsFile = config.mergedSegmentsFile || os.tmpdir() + "/hls-downloader/" + runId + ".ts";
     const segmentsDir = config.segmentsDir || os.tmpdir() + "/hls-downloader/" + runId + "/";
+    const ffmpegPath = config.ffmpegPath || "ffmpeg";
 
     // Create target directory
     fs.mkdirpSync(path.dirname(mergedSegmentsFile));
@@ -61,12 +62,12 @@ export async function download(config: IConfig): Promise<void> {
 
     // Merge TS files
     const mergeFunction = config.mergeUsingFfmpeg
-        ? (segments: string[], merged: string) => mergeChunksFfmpeg(logger, segments, merged)
+        ? (segments: string[], merged: string) => mergeChunksFfmpeg(logger, ffmpegPath, segments, merged)
         : mergeChunksStream;
     await mergeFunction(segments, mergedSegmentsFile);
 
     // Transmux
-    await transmuxTsToMp4(logger, mergedSegmentsFile, config.outputFile);
+    await transmuxTsToMp4(logger, ffmpegPath, mergedSegmentsFile, config.outputFile);
 
     // Delete temporary files
     fs.remove(segmentsDir);

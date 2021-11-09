@@ -3,6 +3,7 @@ import { ILogger } from "./Logger";
 
 export interface IConfig {
     mergeUsingFfmpeg?: boolean;
+    ffmpegPath?: string;
     concurrency?: number;
     live?: boolean;
     fromEnd?: number;
