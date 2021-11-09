@@ -2,7 +2,7 @@ import * as cp from "child_process";
 import * as fs from "fs";
 import { ILogger } from "./Logger";
 
-async function spawnFfmpeg(logger: ILogger, ffmpegPath: string, argss: string[]): Promise<void> {
+export async function spawnFfmpeg(logger: ILogger, ffmpegPath: string, argss: string[]): Promise<void> {
     return new Promise((resolve, reject) => {
         logger.log("Spawning FFMPEG", ffmpegPath, argss.join(" "));
 
