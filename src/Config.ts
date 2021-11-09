@@ -13,5 +13,5 @@ export interface IConfig {
     mergedSegmentsFile?: string;
     outputFile: string;
     httpHeaders?: HttpHeaders;
-    logger?: ILogger | ((...params: any) => void);
+    logger?: ILogger | ((...params: any) => void) | null;
 }
