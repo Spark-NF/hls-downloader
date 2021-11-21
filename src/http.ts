@@ -8,8 +8,8 @@ export async function get(url: string, headers?: HttpHeaders): Promise<string> {
     return response.data;
 }
 
-export async function download(url: string, file: string, headers?: HttpHeaders): Promise<void> {
-    const response = await axios(url, { responseType: "stream", headers });
+export async function download(url: string, file: string, headers?: HttpHeaders, httpsAgent?: any): Promise<void> {
+    const response = await axios(url, { responseType: "stream", headers, httpsAgent});
     const stream = response.data.pipe(fs.createWriteStream(file));
     return new Promise((resolve, reject) => {
         stream.on("finish", resolve);
