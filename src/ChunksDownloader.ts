@@ -43,7 +43,10 @@ export abstract class ChunksDownloader {
         return parser.manifest;
     }
 
-    protected async downloadSegment(segmentUrl: string): Promise<void> {
+    protected async downloadSegment(segmentUrl: string, maxRetries: number, currentTry: number): Promise<void> {
+        if(currentTry > maxRetries) {
+            throw new Error('too many retries - download failed')
+        }
         // Get filename from URL
         const question = segmentUrl.indexOf("?");
         let filename = question > 0 ? segmentUrl.substr(0, question) : segmentUrl;
@@ -51,7 +54,11 @@ export abstract class ChunksDownloader {
         filename = filename.substr(slash + 1);
 
         // Download file
-        await download(segmentUrl, path.join(this.segmentDirectory, filename), this.httpHeaders);
+        await download(segmentUrl, path.join(this.segmentDirectory, filename), this.httpHeaders)
+            .catch((err) => {
+                this.logger.log("Error:", err);
+                this.downloadSegment(segmentUrl, maxRetries, ++currentTry);
+            });
         this.logger.log("Received:", segmentUrl);
     }
 }

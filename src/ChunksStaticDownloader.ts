@@ -8,6 +8,7 @@ export class ChunksStaticDownloader extends ChunksDownloader {
         logger: ILogger,
         playlistUrl: string,
         concurrency: number,
+        private maxRetries: number,
         segmentDirectory: string,
         httpHeaders?: HttpHeaders,
     ) {
@@ -20,7 +21,7 @@ export class ChunksStaticDownloader extends ChunksDownloader {
 
         this.logger.log(`Queueing ${segments.length} segment(s)`);
         for (const uri of segments) {
-            this.queue.add(() => this.downloadSegment(uri));
+            this.queue.add(() => this.downloadSegment(uri, this.maxRetries, 1));
         }
 
         this.queue.onIdle().then(() => this.finished());
