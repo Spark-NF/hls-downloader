@@ -49,6 +49,7 @@ export async function download(config: IConfig): Promise<void> {
             logger,
             playlistUrl,
             config.concurrency || 1,
+            config.maxRetries || 1,
             segmentsDir,
             config.httpHeaders,
         );

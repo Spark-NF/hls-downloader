@@ -7,6 +7,7 @@ export interface IConfig {
     concurrency?: number;
     live?: boolean;
     fromEnd?: number;
+    maxRetries?: number;
     quality?: "worst" | "best" | number;
     streamUrl: string;
     segmentsDir?: string;

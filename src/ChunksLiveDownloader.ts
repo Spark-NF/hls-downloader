@@ -49,7 +49,7 @@ export class ChunksLiveDownloader extends ChunksDownloader {
         this.lastSegment = toLoad[toLoad.length - 1];
         for (const uri of toLoad) {
             this.logger.log("Queued:", uri);
-            this.queue.add(() => this.downloadSegment(uri));
+            this.queue.add(() => this.downloadSegment(uri, 1, 1));
         }
 
         // Timeout after X seconds without new segment
