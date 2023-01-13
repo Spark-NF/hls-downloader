@@ -25,7 +25,8 @@ export class ArgumentParser {
             .option("--ffmpeg-path", "Path to the FFMPEG binary", "ffmpeg")
             .option("--segments-dir <dir>", "Where the TS segments will be stored")
             .option("--merged-segments-file <file>", "Location of the merged TS segments file")
-            .option("-c, --concurrency <threads>", "How many threads to use for segments download", (v: string) => parseInt(v, 10), 1)
+            .option("-c, --concurrency <threads>", "How many threads to use for segment downloads", (v: string) => parseInt(v, 10), 1)
+            .option("-r, --max-retries <retries>", "How many times to retry on failed segment downloads", (v: string) => parseInt(v, 10), 1)
             .option("-q, --quality <quality>", "Stream quality when possible (worst, best, or max bandwidth)", "best")
             .option("-o, --output-file <file>", "Target file to download the stream to")
             .option("-h, --header <header>", "Header to pass to the HTTP requests", parseHeaders, {})
@@ -50,6 +51,7 @@ export class ArgumentParser {
         // Read arguments to variables
         return {
             concurrency: opts.concurrency,
+            maxRetries: opts.maxRetries,
             fromEnd: opts.fromEnd,
             httpHeaders: opts.header,
             live: opts.live,

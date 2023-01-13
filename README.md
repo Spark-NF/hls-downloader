@@ -74,6 +74,11 @@ How many threads to use for downloading segments.
 
 * Default: `1`
 
+#### `-r`, `--max-retries`, `maxRetries`
+How many times to retry when failing to download segments.
+
+* Default: `1`
+
 #### `-q`, `--quality`, `quality` 🔒*
 Stream quality: `worst`, `best`, or max bandwidth.
 

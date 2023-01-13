@@ -8,11 +8,11 @@ export class ChunksStaticDownloader extends ChunksDownloader {
         logger: ILogger,
         playlistUrl: string,
         concurrency: number,
-        private maxRetries: number,
+        maxRetries: number,
         segmentDirectory: string,
         httpHeaders?: HttpHeaders,
     ) {
-        super(logger, playlistUrl, concurrency, segmentDirectory, httpHeaders);
+        super(logger, playlistUrl, concurrency, maxRetries, segmentDirectory, httpHeaders);
     }
 
     protected async refreshPlayList(): Promise<void> {
@@ -21,7 +21,7 @@ export class ChunksStaticDownloader extends ChunksDownloader {
 
         this.logger.log(`Queueing ${segments.length} segment(s)`);
         for (const uri of segments) {
-            this.queue.add(() => this.downloadSegment(uri, this.maxRetries, 1));
+            this.queue.add(() => this.downloadSegment(uri));
         }
 
         this.queue.onIdle().then(() => this.finished());

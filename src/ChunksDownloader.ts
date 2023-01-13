@@ -14,6 +14,7 @@ export abstract class ChunksDownloader {
         protected logger: ILogger,
         protected playlistUrl: string,
         protected concurrency: number,
+        protected maxRetries: number,
         protected segmentDirectory: string,
         protected httpHeaders?: HttpHeaders,
     ) {
@@ -43,10 +44,7 @@ export abstract class ChunksDownloader {
         return parser.manifest;
     }
 
-    protected async downloadSegment(segmentUrl: string, maxRetries: number, currentTry: number): Promise<void> {
-        if(currentTry > maxRetries) {
-            throw new Error('too many retries - download failed')
-        }
+    protected async downloadSegment(segmentUrl: string): Promise<void> {
         // Get filename from URL
         const question = segmentUrl.indexOf("?");
         let filename = question > 0 ? segmentUrl.substr(0, question) : segmentUrl;
@@ -54,11 +52,20 @@ export abstract class ChunksDownloader {
         filename = filename.substr(slash + 1);
 
         // Download file
-        await download(segmentUrl, path.join(this.segmentDirectory, filename), this.httpHeaders)
-            .catch((err) => {
-                this.logger.log("Error:", err);
-                this.downloadSegment(segmentUrl, maxRetries, ++currentTry);
-            });
+        await this.downloadWithRetries(segmentUrl, path.join(this.segmentDirectory, filename), this.maxRetries);
         this.logger.log("Received:", segmentUrl);
+    }
+
+    private async downloadWithRetries(url: string, file: string, maxRetries: number, currentTry = 1): Promise<void> {
+        if (currentTry > maxRetries) {
+            throw new Error('too many retries - download failed')
+        }
+
+        try {
+            await download(url, file, this.httpHeaders);
+        } catch (err) {
+            this.logger.log("Error:", err);
+            this.downloadWithRetries(url, file, maxRetries, ++currentTry);
+        }
     }
 }

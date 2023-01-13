@@ -13,13 +13,14 @@ export class ChunksLiveDownloader extends ChunksDownloader {
         logger: ILogger,
         playlistUrl: string,
         concurrency: number,
+        maxRetries: number,
         private fromEnd: number,
         segmentDirectory: string,
         private timeoutDuration: number = 60,
         private playlistRefreshInterval: number = 5,
         httpHeaders?: HttpHeaders,
     ) {
-        super(logger, playlistUrl, concurrency, segmentDirectory, httpHeaders);
+        super(logger, playlistUrl, concurrency, maxRetries, segmentDirectory, httpHeaders);
     }
 
     protected async refreshPlayList(): Promise<void> {
@@ -49,7 +50,7 @@ export class ChunksLiveDownloader extends ChunksDownloader {
         this.lastSegment = toLoad[toLoad.length - 1];
         for (const uri of toLoad) {
             this.logger.log("Queued:", uri);
-            this.queue.add(() => this.downloadSegment(uri, 1, 1));
+            this.queue.add(() => this.downloadSegment(uri));
         }
 
         // Timeout after X seconds without new segment
