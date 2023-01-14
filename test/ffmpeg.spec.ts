@@ -2,7 +2,7 @@ jest.mock("child_process");
 jest.mock("fs");
 
 import * as cp from "child_process";
-import * as EventEmitter from "events";
+import { EventEmitter } from "events";
 import * as fs from "fs";
 import { spawnFfmpeg, mergeChunks, transmuxTsToMp4 } from "../src/ffmpeg";
 
@@ -42,8 +42,8 @@ describe("ffmpeg", () => {
             const proc = setupSpawnMock();
             const promise = spawnFfmpeg(logger, "my-ffmpeg", ["arg1", "arg2"]);
             proc.emit("message", "some message");
-            proc.stdout.emit("data", "some stdout");
-            proc.stderr.emit("data", "some stderr");
+            proc.stdout!.emit("data", "some stdout");
+            proc.stderr!.emit("data", "some stderr");
             proc.emit("close", 0);
             await promise;
 

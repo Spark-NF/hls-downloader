@@ -15,10 +15,13 @@ module.exports = {
         "src/**/*.ts",
     ],
 
-    globals: {
-        "ts-jest": {
-            diagnostics: false,
-            tsconfig: "tsconfig.json"
-        }
+    transform: {
+        "^.+.tsx?$": [
+            "ts-jest",
+            {
+                diagnostics: false,
+                tsconfig: "tsconfig.json"
+            }
+        ],
     }
 };

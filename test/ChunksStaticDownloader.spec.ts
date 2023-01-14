@@ -30,7 +30,7 @@ describe("ChunksStaticDownloader", () => {
         });
 
         const dir = tempy.directory();
-        const downloader = new ChunksStaticDownloader(logger, PLAYLIST_URL, 1, dir);
+        const downloader = new ChunksStaticDownloader(logger, PLAYLIST_URL, 1, 1, dir);
         await downloader.start();
 
         const files = fs.readdirSync(dir);
