@@ -63,9 +63,9 @@ export abstract class ChunksDownloader {
 
         try {
             await download(url, file, this.httpHeaders);
-        } catch (err) {
-            this.logger.log("Error:", err);
-            this.downloadWithRetries(url, file, maxRetries, ++currentTry);
+        } catch (err: any) {
+            this.logger.log("Timoout:", err.message);
+            this.downloadWithRetries(url, file, maxRetries, currentTry);
         }
     }
 }

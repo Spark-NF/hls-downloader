@@ -1,7 +1,8 @@
 {
     "name": "node-hls-downloader",
-    "version": "2.2.0",
+    "version": "6.2.0",
     "description": "Download HLS streams.",
+    "lint": "npm run lint -- --fix",
     "main": "dist/index.js",
     "types": "dist/src/index.d.ts",
     "bin": {
@@ -24,7 +25,7 @@
         "commander": "^9.5.0",
         "fs-extra": "^11.1.0",
         "m3u8-parser": "^6.0.0",
-        "p-queue": "^6.6.2"
+        "p-queue": "^5.0.0"
     },
     "devDependencies": {
         "@rollup/plugin-eslint": "^9.0.2",

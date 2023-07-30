@@ -72,6 +72,12 @@ export async function download(config: IConfig): Promise<void> {
     await transmuxTsToMp4(logger, ffmpegPath, mergedSegmentsFile, config.outputFile);
 
     // Delete temporary files
-    fs.remove(segmentsDir);
-    fs.remove(mergedSegmentsFile);
-}
+    try {
+        await fs.remove(segmentsDir);
+        await fs.remove(mergedSegmentsFile);
+    }
+    catch (err: any) {
+        console.log("amir");
+        console.log(err.message);
+    }
+}   

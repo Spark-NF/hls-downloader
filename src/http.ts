@@ -8,11 +8,41 @@ export async function get(url: string, headers?: HttpHeaders): Promise<string> {
     return response.data;
 }
 
-export async function download(url: string, file: string, headers?: HttpHeaders): Promise<void> {
+export async function download(
+    url: string,
+    file: string,
+    headers?: HttpHeaders
+): Promise<void> {
     const response = await axios(url, { responseType: "stream", headers });
     const stream = response.data.pipe(fs.createWriteStream(file));
     return new Promise((resolve, reject) => {
-        stream.on("finish", resolve);
-        stream.on("error", reject);
+        try {
+            stream.on("finish", resolve);
+            stream.on("error", reject);
+        } catch (err: any) {
+            console.log("amir TimeOut");
+            console.log(err.message);
+            reject(err.message);
+        }
     });
 }
+
+// export async function download(
+//   url: string,
+//   file: string,
+//   headers?: HttpHeaders
+// ): Promise<void> {
+//   const response = await fetch(url);
+//   if (!response.ok) {
+//     throw new Error("Network response was not ok");
+//   }
+// //   const data = await response.arrayBuffer(); // Use response.buffer() if the data is binary (e.g., images)
+//   // Write the data to a file
+// //   const buffer = Buffer.from(arrayBuffer);
+//   try {
+//     fs.writeFileSync(file, buffer);
+//     console.log("Data fetched and saved successfully!");
+//   } catch (err: any) {
+//     console.error("Error writing to file:", err);
+//   }
+// }
