@@ -11,12 +11,12 @@ export abstract class ChunksDownloader {
     protected reject?: () => void;
 
     constructor(
-        protected logger: ILogger,
-        protected playlistUrl: string,
-        protected concurrency: number,
-        protected maxRetries: number,
-        protected segmentDirectory: string,
-        protected httpHeaders?: HttpHeaders,
+    protected logger: ILogger,
+    protected playlistUrl: string,
+    protected concurrency: number,
+    protected maxRetries: number,
+    protected segmentDirectory: string,
+    protected httpHeaders?: HttpHeaders
     ) {
         this.queue = new PQueue({
             concurrency: this.concurrency,
@@ -32,40 +32,49 @@ export abstract class ChunksDownloader {
         });
     }
 
-    protected abstract refreshPlayList(): Promise<void>;
+  protected abstract refreshPlayList(): Promise<void>;
 
-    protected async loadPlaylist(): Promise<m3u8.Manifest> {
-        const response = await get(this.playlistUrl, this.httpHeaders);
+  protected async loadPlaylist(): Promise<m3u8.Manifest> {
+      const response = await get(this.playlistUrl, this.httpHeaders);
 
-        const parser = new m3u8.Parser();
-        parser.push(response);
-        parser.end();
+      const parser = new m3u8.Parser();
+      parser.push(response);
+      parser.end();
 
-        return parser.manifest;
-    }
+      return parser.manifest;
+  }
 
-    protected async downloadSegment(segmentUrl: string): Promise<void> {
-        // Get filename from URL
-        const question = segmentUrl.indexOf("?");
-        let filename = question > 0 ? segmentUrl.substr(0, question) : segmentUrl;
-        const slash = filename.lastIndexOf("/");
-        filename = filename.substr(slash + 1);
+  protected async downloadSegment(segmentUrl: string): Promise<void> {
+      // Get filename from URL
+      const question = segmentUrl.indexOf("?");
+      let filename = question > 0 ? segmentUrl.substr(0, question) : segmentUrl;
+      const slash = filename.lastIndexOf("/");
+      filename = filename.substr(slash + 1);
 
-        // Download file
-        await this.downloadWithRetries(segmentUrl, path.join(this.segmentDirectory, filename), this.maxRetries);
-        this.logger.log("Received:", segmentUrl);
-    }
+      // Download file
+      await this.downloadWithRetries(
+          segmentUrl,
+          path.join(this.segmentDirectory, filename),
+          this.maxRetries
+      );
+      this.logger.log("Received:", segmentUrl);
+  }
 
-    private async downloadWithRetries(url: string, file: string, maxRetries: number, currentTry = 1): Promise<void> {
-        if (currentTry > maxRetries) {
-            throw new Error('too many retries - download failed')
-        }
+  private async downloadWithRetries(
+      url: string,
+      file: string,
+      maxRetries: number,
+      currentTry = 1
+  ): Promise<void> {
+      try {
+          if (currentTry > maxRetries) {
+              throw new Error("too many retries - download failed");
+          }
 
-        try {
-            await download(url, file, this.httpHeaders);
-        } catch (err: any) {
-            this.logger.log("Timoout:", err.message);
-            this.downloadWithRetries(url, file, maxRetries, currentTry);
-        }
-    }
+          await download(url, file, this.httpHeaders);
+      } catch (err: any) {
+          this.logger.log("Timoout:", err.message);
+          await this.downloadWithRetries(url, file, maxRetries, currentTry);
+      }
+  }
 }

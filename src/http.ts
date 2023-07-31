@@ -13,18 +13,22 @@ export async function download(
     file: string,
     headers?: HttpHeaders
 ): Promise<void> {
-    const response = await axios(url, { responseType: "stream", headers });
-    const stream = response.data.pipe(fs.createWriteStream(file));
-    return new Promise((resolve, reject) => {
-        try {
-            stream.on("finish", resolve);
-            stream.on("error", reject);
-        } catch (err: any) {
-            console.log("amir TimeOut");
-            console.log(err.message);
-            reject(err.message);
-        }
-    });
+    try {
+        const response = await axios(url, { responseType: "stream", headers });
+
+        const writer = fs.createWriteStream(file);
+
+        response.data.pipe(writer);
+
+        return new Promise((resolve, reject) => {
+            writer.on("finish", resolve);
+            writer.on("error", reject);
+        });
+    } catch (err: any) {
+        console.log(err.message);
+
+        throw new Error("Network response was not ok");
+    }
 }
 
 // export async function download(
