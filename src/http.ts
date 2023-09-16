@@ -4,8 +4,15 @@ import axios from "axios";
 export type HttpHeaders = { [name: string]: string };
 
 export async function get(url: string, headers?: HttpHeaders): Promise<string> {
-    const response = await axios.get(url, { responseType: "text", headers });
-    return response.data;
+    try {
+        const response = await axios.get(url, { responseType: "text", headers });
+        return response.data;
+    } catch (error) {
+        console.log(error);
+
+        console.log("retrying... axios get");
+        return get(url, headers);
+    }
 }
 
 export async function download(
