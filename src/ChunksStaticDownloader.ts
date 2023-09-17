@@ -28,7 +28,7 @@ export class ChunksStaticDownloader extends ChunksDownloader {
     }
 
     private finished(): void {
-        this.logger.log("All segments received, stopping");
+        this.logger.log("All segments received, finished!");
         this.resolve!();
     }
 }
