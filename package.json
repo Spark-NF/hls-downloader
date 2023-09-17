@@ -1,5 +1,5 @@
 {
-    "name": "node-hls-downloader",
+    "name": "node-hls-downloader-amir",
     "version": "6.2.0",
     "description": "Download HLS streams.",
     "lint": "npm run lint -- --fix",
@@ -18,7 +18,7 @@
         "type": "git",
         "url": "git+https://github.com/Spark-NF/hls-downloader.git"
     },
-    "author": "Spark-NF <spark_ps@hotmail.fr>",
+    "author": "amir",
     "license": "Apache-2.0",
     "dependencies": {
         "axios": "^1.2.2",
